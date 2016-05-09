@@ -8,6 +8,7 @@
 # tweets_seattle
 
 predictionsForCity <- function(coll = "meteor.tweets_atlanta"){
+    print(paste("Process Started...", coll))
     opinion<- c()
     safety <- c()
     health <- c()
@@ -102,7 +103,7 @@ predictionsForCity <- function(coll = "meteor.tweets_atlanta"){
                                                   q_upr_max = max(q_upr)
                                                   ))
         
-        print(mongo.find.one(mongo, "meteor.cities", list(city=track)))
+        #print(mongo.find.one(mongo, "meteor.cities", list(city=track)))
     }
 }
 
