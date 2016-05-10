@@ -36,7 +36,19 @@ predictionsForCity <- function(coll = "meteor.tweets_atlanta"){
             qlindx <- c(qlindx, value$quality_of_life_index)
             track  <- value$track
         }
-
+        
+        # Normalize the data...
+        opinion <- (opinion-min(opinion))/(max(opinion)-min(opinion))
+        # Normalize the data...
+        safety <- (safety-min(16.64))/(max(85.72)-min(16.64))
+        health <- (health-min(32.29))/(max(89.81)-min(32.29))
+        qlindx <- (qlindx-min(8.92))/(max(241.56)-min(8.92))
+        traffi <- (traffi-min(51.41))/(max(363.15)-min(51.41))
+        pollut <- (pollut-min(10.47))/(max(99.24)-min(10.47))
+        
+        print(opinion)
+        
+        # Setup models...
         s_model <- lm(safety ~ opinion)
         h_model <- lm(health ~ opinion)
         t_model <- lm(traffi ~ opinion)
@@ -100,9 +112,47 @@ predictionsForCity <- function(coll = "meteor.tweets_atlanta"){
                                                   q_lwr_min = min(q_lwr),
                                                   q_lwr_max = max(q_lwr),
                                                   q_upr_min = min(q_upr),
-                                                  q_upr_max = max(q_upr)
+                                                  q_upr_max = max(q_upr),
+                                                  num_twets = length(opinion)
                                                   ))
         
+        height <- 300
+        width  <- 300
+        track  <- paste("figs//",track, sep="")
+        ##
+        png_s <- paste(track,"_s.png", sep="")
+        png_q <- paste(track,"_q.png", sep="")
+        png_h <- paste(track,"_h.png", sep="")
+        png_t <- paste(track,"_t.png", sep="")
+        png_p <- paste(track,"_p.png", sep="")
+        ## Safety
+        png(file=png_s, width,height,units="px",bg = "transparent")
+        par(mar=c(0, 0, 0, 0))
+        plot(safety,opinion, axes=FALSE, bty="n", ann=FALSE, xlim=c(0,1), ylim=c(0,1), pch=20, bg="#cacaca", col="#676767", cex=0.3)
+        dev.off()
+        ## Quality
+        png(file=png_q, width,height,units="px",bg = "transparent")
+        par(mar=c(0, 0, 0, 0))
+        plot(qlindx,opinion, axes=FALSE, bty="n", ann=FALSE, xlim=c(0,1), ylim=c(0,1), pch=20, bg="#cacaca", col="#676767", cex=0.3)
+        dev.off()
+        ## Health
+        png(file=png_h, width,height,units="px",bg = "transparent")
+        par(mar=c(0, 0, 0, 0))
+        plot(health,opinion, axes=FALSE, bty="n", ann=FALSE, xlim=c(0,1), ylim=c(0,1), pch=20, bg="#cacaca", col="#676767", cex=0.3)
+        dev.off()
+        ## Traffic
+        png(file=png_t, width,height,units="px",bg = "transparent")
+        par(mar=c(0, 0, 0, 0))
+        plot(traffi,opinion,axes=FALSE, bty="n", ann=FALSE, xlim=c(0,1), ylim=c(0,1), pch=20, bg="#cacaca", col="#676767", cex=0.3)
+        dev.off()
+        ## Pollution
+        png(file=png_p, width,height,units="px",bg = "transparent")
+        par(mar=c(0, 0, 0, 0))
+        plot(pollut,opinion,axes=FALSE, bty="n", ann=FALSE, xlim=c(0,1), ylim=c(0,1), pch=20, bg="#cacaca", col="#676767", cex=0.3)
+        dev.off()
+        #plot(opinion,qlindx,axes=FALSE, bty="n", ann=FALSE, xaxt="n", yaxt="n",xlim=c(-1,1), ylim=c(0,200), xaxs = "i", yaxs = "i", pch=20, bg="#cacaca", col="#676767", cex=0.5)
+        # performance,score
+        # opinion, health, qlindx, traffi, pollut
         #print(mongo.find.one(mongo, "meteor.cities", list(city=track)))
     }
 }
