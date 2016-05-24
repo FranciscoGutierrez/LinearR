@@ -194,14 +194,14 @@ predictionForCity <- function(coll = "meteor.tweets_atlanta"){
 
 # New York Weather: 8.8 (0%) - 16.7 (33.4%) 
 # Pollution: 21-42
-mongoTestCity <- function(city = "newyork", w1=0, w2=33.4, s1=48.48, s2=74.78, t1=49, t2=61, a1= 86, a2= 93, num = 100 ){
+mongoTestCity <- function(city = "newyork", w1=0, w2=33.4, s1=48.48, s2=74.78, t1=49, t2=61, a1= 86, a2= 93, num = 1000 ){
     traffi <- c()
     pollut <- c()
     mongo <- mongo.create("127.0.0.1:3001",name="meteor")
     if(mongo.is.connected(mongo) == TRUE) {
         mongo.get.database.collections(mongo, "meteor")
-    
-        opinion <- runif(num, 0, 10)
+        m <- round(runif(1,4,9))
+        opinion <- sort(runif(num, 0,10))
         weather <- runif(num, w1, w2)
         safety  <- runif(num, s1, s2)
         airqual <- runif(num, a1, a2)
@@ -276,11 +276,18 @@ mongoTestCity <- function(city = "newyork", w1=0, w2=33.4, s1=48.48, s2=74.78, t
                                                   a_lwr_max = max(a_lwr),
                                                   a_upr_min = min(a_upr),
                                                   a_upr_max = max(a_upr),
-                                                  num_twets = num
-        ))
+                                                  num_twets = num,
+                                                  w1 = w1,
+                                                  w2 = w2,
+                                                  s1 = s1,
+                                                  s2 = s2,
+                                                  t1 = t1,
+                                                  t2 = t2,
+                                                  a1 = a1,
+                                                  a2 = a2))
         
-        height <- 300
-        width  <- 300
+        height <- 150
+        width  <- 150
         track  <- paste("figs//",city, sep="")
         ##
         png_s <- paste(track,"_s.png", sep="")
@@ -290,22 +297,22 @@ mongoTestCity <- function(city = "newyork", w1=0, w2=33.4, s1=48.48, s2=74.78, t
         ## Safety
         png(file=png_s, width,height,units="px",bg = "transparent")
         par(mar=c(0, 0, 0, 0))
-        plot(safety,opinion, axes=FALSE, bty="n", ann=FALSE, xlim=c(0,1), ylim=c(0,1), pch=20, bg="#cacaca", col="#676767", cex=0.3)
+        plot(safety,opinion, axes=FALSE, bty="n", ann=FALSE, xlim=c(0,100), ylim=c(0,10), pch=20, bg="#fabe0f", col="#fabe0f", cex=0.3)
         dev.off()
         ## Weather
         png(file=png_w, width,height,units="px",bg = "transparent")
         par(mar=c(0, 0, 0, 0))
-        plot(weather,opinion, axes=FALSE, bty="n", ann=FALSE, xlim=c(0,1), ylim=c(0,1), pch=20, bg="#cacaca", col="#676767", cex=0.3)
+        plot(weather,opinion, axes=FALSE, bty="n", ann=FALSE, xlim=c(0,100), ylim=c(0,10), pch=20, bg="#b5e000", col="#b5e000", cex=0.3)
         dev.off()
         ## Traffic
         png(file=png_t, width,height,units="px",bg = "transparent")
         par(mar=c(0, 0, 0, 0))
-        plot(traffic,opinion,axes=FALSE, bty="n", ann=FALSE, xlim=c(0,1), ylim=c(0,1), pch=20, bg="#cacaca", col="#676767", cex=0.3)
+        plot(traffic,opinion,axes=FALSE, bty="n", ann=FALSE, xlim=c(0,100), ylim=c(0,10), pch=20, bg="#0f3445", col="#0f3445", cex=0.3)
         dev.off()
         ## Air Quality
         png(file=png_a, width,height,units="px",bg = "transparent")
         par(mar=c(0, 0, 0, 0))
-        plot(airqual,opinion,axes=FALSE, bty="n", ann=FALSE, xlim=c(0,1), ylim=c(0,1), pch=20, bg="#cacaca", col="#676767", cex=0.3)
+        plot(airqual,opinion,axes=FALSE, bty="n", ann=FALSE, xlim=c(0,100), ylim=c(0,10), pch=20, bg="#15afbd", col="#15afbd", cex=0.3)
         dev.off()
         #plot(opinion,qlindx,axes=FALSE, bty="n", ann=FALSE, xaxt="n", yaxt="n",xlim=c(-1,1), ylim=c(0,200), xaxs = "i", yaxs = "i", pch=20, bg="#cacaca", col="#676767", cex=0.5)
         # performance,score
